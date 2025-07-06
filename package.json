@@ -5,13 +5,22 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+     "ingest": "tsx src/scripts/ingest.ts",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.62",
+    "@langchain/langgraph": "^0.3.6",
+    "@langchain/openai": "^0.5.18",
+    "@langchain/textsplitters": "^0.1.0",
+    "langchain": "^0.3.29",
+    "next": "15.3.5",
+    "ollama": "^0.5.16",
+    "openai": "^5.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.5"
+    "zod": "^3.25.74"
   },
   "devDependencies": {
     "typescript": "^5",
