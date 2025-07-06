@@ -24,6 +24,8 @@ Context:
     ["human", "{question}"]
   ]);
 
+  console.log("prompt", prompt);
+
   // 3 . call the LLM
   const response = await llm.invoke(
     await prompt.format({ context, question })

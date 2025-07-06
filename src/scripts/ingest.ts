@@ -2,8 +2,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
+import { supabaseClient } from "@/lib/supabase";
 
 // 1‑A. Read .md files
 const dataDir = "src/data/knowledge";                      // put your .md files here
@@ -19,9 +20,17 @@ const splitter = new RecursiveCharacterTextSplitter({
 });
 const docs = await splitter.createDocuments(mdTexts);
 
-// 1‑C. Embed + store (memory store for now)
-const embeddings =
-  new OpenAIEmbeddings();               
+// 1‑C. Embed + store in Supabase
+const embeddings = new OpenAIEmbeddings();
 
-export const store = await MemoryVectorStore.fromDocuments(docs, embeddings);
-console.log(`✅  Ingested ${docs.length} chunks`);
+export const store = await SupabaseVectorStore.fromDocuments(
+  docs,
+  embeddings,
+  {
+    client: supabaseClient,
+    tableName: 'documents',
+    queryName: 'match_documents'
+  }
+);
+
+console.log(`✅ Ingested ${docs.length} chunks into Supabase`);

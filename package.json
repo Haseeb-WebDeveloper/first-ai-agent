@@ -5,15 +5,17 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-     "ingest": "tsx src/scripts/ingest.ts",
+    "ingest": "tsx src/scripts/ingest.ts",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@langchain/community": "^0.3.48",
     "@langchain/core": "^0.3.62",
     "@langchain/langgraph": "^0.3.6",
     "@langchain/openai": "^0.5.18",
     "@langchain/textsplitters": "^0.1.0",
+    "@supabase/supabase-js": "^2.50.3",
     "langchain": "^0.3.29",
     "next": "15.3.5",
     "ollama": "^0.5.16",
