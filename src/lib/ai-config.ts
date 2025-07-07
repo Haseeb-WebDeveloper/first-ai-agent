@@ -11,8 +11,6 @@ Instructions:
 1. Answer based ONLY on the provided context
 2. If you find the answer in the context, provide it clearly and concisely
 3. If the exact answer isn't in the context but you can make a reasonable inference from the context, explain your reasoning
-4. If you cannot find relevant information in the context, respond with "I don't know"
-5. When citing information, reference the category in [brackets] if available
 
 Answer:` 
 } as const; 
