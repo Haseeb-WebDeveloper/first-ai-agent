@@ -6,15 +6,15 @@ create table if not exists documents (
   id bigserial primary key,
   content text, -- corresponds to pageContent in LangChain
   metadata jsonb,
-  embedding vector(1536)
+  embedding vector(1024)
 );
 
 -- Create a function to search for similar documents
 create or replace function match_documents (
-  query_embedding vector(1536),
+  query_embedding vector(1024),
   filter jsonb default '{}'::jsonb,
   match_count int default 10,
-  match_threshold float8 default 0.78
+  match_threshold float8 default 0.5
 ) returns table (
   id bigint,
   content text,

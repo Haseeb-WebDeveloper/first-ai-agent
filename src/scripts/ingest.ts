@@ -1,55 +1,86 @@
-#!/usr/bin/env tsx
 import fs from "node:fs/promises";
 import path from "node:path";
-import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { MarkdownTextSplitter, RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+// import { OpenAIEmbeddings } from "@langchain/openai";
+import { OllamaEmbeddings } from "@langchain/ollama";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { supabaseClient } from "@/lib/supabase";
 
-// 1‑A. Read .md files
-const dataDir = "src/data/knowledge";                      // put your .md files here
-const files = await fs.readdir(dataDir);
-const mdFiles = files.filter(f => f.endsWith(".md"));
+async function main() {
+  try {
+    // First clear existing documents
+    await supabaseClient.from('documents').delete().neq('id', 0);  //default all rows where id is not 0
 
-// Process each file and add metadata
-const docs = [];
-for (const file of mdFiles) {
-  const content = await fs.readFile(path.join(dataDir, file), "utf8");
-  
-  // 1-B. Extract metadata from filename
-  const category = path.basename(file, ".md").split("-")[0] || "general";
-  
-  // 1-C. Chunk with metadata
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 400,
-    chunkOverlap: 50
-  });
-  
-  const fileChunks = await splitter.createDocuments(
-    [content],
-    [{ 
-      source: file,
-      category,
-      chunk_type: "markdown",
-      created_at: new Date().toISOString()
-    }]
-  );
-  
-  docs.push(...fileChunks);
+    // 1‑A. Read .md files
+    const dataDir = "src/data/knowledge";    
+    const files = await fs.readdir(dataDir);  //read all files in the dataDir
+    const mdFiles = files.filter(f => f.endsWith(".md"));
+
+    // Process each file and add metadata
+    const docs = [];
+    for (const file of mdFiles) {
+      const content = await fs.readFile(path.join(dataDir, file), "utf8");  //read the file
+      
+      // 1-B. Extract metadata from filename
+      const category = path.basename(file, ".md").split("-")[0] || "general";
+      
+      const splitter = new MarkdownTextSplitter ({
+        chunkSize: 600,
+        chunkOverlap: 80,
+      });
+
+      // 1-C. Chunk with metadata
+      const fileChunks = await splitter.createDocuments(
+        [content],
+        [{ 
+          source: file,
+          category,
+          chunk_type: "markdown",
+          created_at: new Date().toISOString()
+        }]
+      );
+
+      docs.push(...fileChunks);
+    }
+
+    if (docs.length === 0) {
+      console.log("⚠️ No documents found to ingest. Please add .md files to", dataDir);
+      return;
+    }
+
+    // 1‑D. Embed + store in Supabase
+    const embeddings = new OllamaEmbeddings({
+        model: "bge-m3",
+    });
+
+    // First verify the Supabase connection
+    const { data: tableInfo, error: tableError } = await supabaseClient
+      .from('documents')
+      .select('count');
+    
+    if (tableError) {
+      console.error("Error accessing Supabase table:", tableError);
+      return;
+    }
+
+    // Store the documents
+    const store = await SupabaseVectorStore.fromDocuments(
+      docs,
+      embeddings,
+      {
+        client: supabaseClient,
+        tableName: 'documents',
+        queryName: 'match_documents'
+      }
+    );
+
+    // Verify storage by trying to retrieve a document
+    const testQuery = "pricing plans";
+    await store.similaritySearchWithScore(testQuery, 1);
+  } catch (error) {
+    console.error("\nError during ingestion:", error);
+    process.exit(1);
+  }
 }
 
-// 1‑D. Embed + store in Supabase
-const embeddings = new OpenAIEmbeddings();
-
-export const store = await SupabaseVectorStore.fromDocuments(
-  docs,
-  embeddings,
-  {
-    client: supabaseClient,
-    tableName: 'documents',
-    queryName: 'match_documents'
-  }
-);
-
-console.log(`✅ Ingested ${docs.length} chunks into Supabase`);
-console.log("Categories found:", [...new Set(docs.map(d => d.metadata.category))]);
+main();

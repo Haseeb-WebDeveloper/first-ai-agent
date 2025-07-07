@@ -57,7 +57,7 @@ The Supabase database has:
    - `id`: Unique identifier
    - `content`: The actual text chunk
    - `metadata`: Additional information about the chunk
-   - `embedding`: Vector representation (1536 dimensions)
+   - `embedding`: Vector representation (1024 dimensions)
 
 2. A `match_documents` function that:
    - Takes a query embedding vector

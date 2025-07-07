@@ -1,52 +1,145 @@
-import { store } from "@/scripts/ingest";
-import { ChatOpenAI }   from "@langchain/openai";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { streamText } from 'ai';
+import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
+import { OllamaEmbeddings } from '@langchain/ollama';
+import { supabaseClient } from '@/lib/supabase';
+import { PROMPT_TEMPLATES } from './ai-config';
+import { groq } from '@ai-sdk/groq';
 
-const llm = new ChatOpenAI({ modelName: "gpt-4o-mini", temperature: 0 });
-
-// Default retriever with no filters
-const baseRetriever = store.asRetriever({ k: 4 });
-
-// Retriever with metadata filtering
-export async function getFilteredRetriever(filters: Record<string, any>) {
-  return store.asRetriever({
-    k: 4,
-    filter: filters
+/* ---------- Vector store (Supabase) ------------------------------------ */
+const embeddings = new OllamaEmbeddings({
+    model: 'bge-m3',                       // 1 024‑dim
+    baseUrl: 'http://localhost:11434',     // default Ollama endpoint
   });
-}
 
-export async function answer(question: string, filters?: Record<string, any>) {
-  // 1. Get relevant documents (with optional filtering)
-  const retriever = filters ? await getFilteredRetriever(filters) : baseRetriever;
-  const docs = await retriever.getRelevantDocuments(question);
-  
-  // Add metadata to context
-  const context = docs.map(d => {
-    const meta = d.metadata;
-    return `[Source: ${meta.source}, Category: ${meta.category}]\n${d.pageContent}`;
-  }).join("\n\n");
+const vectorStore = new SupabaseVectorStore(embeddings, {
+    client: supabaseClient,
+    tableName: 'documents',
+    queryName: 'match_documents',
+});
 
-  // 2. Enhanced prompt with metadata awareness
-  const prompt = ChatPromptTemplate.fromMessages([
-    [
-      "system",
-      `You are a factual assistant. Answer only from the context below. 
-If the context is insufficient, say "I don't know."
-Each context chunk includes its source and category - use this to provide more informative answers.
-When citing information, mention the source in parentheses.
+export async function answer(
+    question: string,
+) {
+    try {
+        console.log('\n=== RAG Query Start ===');
+        console.log('Question:', question);
 
-Context:
-{context}`
-    ],
-    ["human", "{question}"]
-  ]);
+        // First verify documents exist
+        const { data: docCount, error: countError } = await supabaseClient
+            .from('documents')
+            .select('count');
 
-  console.log("prompt", prompt);
+        if (countError) {
+            console.error("Error checking documents:", countError);
+        } else {
+            console.log("Documents in database:", docCount);
+        }
 
-  // 3. Call the LLM
-  const response = await llm.invoke(
-    await prompt.format({ context, question })
-  );
+        /* 1. Try direct similarity search first ---------------------------------- */
+        console.log("\nTrying direct similarity search...");
+        try {
+            // Get documents with scores
+            const similarDocs = await vectorStore.similaritySearchWithScore(question, 4);
+            console.log("Similarity search results:", similarDocs.length);
+            console.log("Search scores:", similarDocs.map(([_, score]) => score));
 
-  return response.content;
+            if (similarDocs.length > 0) {
+                // Find the highest score
+                const maxScore = Math.max(...similarDocs.map(([_, score]) => score));
+                console.log("Max similarity score:", maxScore);
+
+                // Only include documents that are within 10% of the highest score
+                const scoreThreshold = maxScore - 0.1;
+                console.log("Score threshold:", scoreThreshold);
+
+                const relevantDocs = similarDocs
+                    .filter(([_, score]) => score >= scoreThreshold)
+                    .map(([doc]) => doc);
+
+                console.log('\n=== Retrieved Documents ===');
+                console.log('Count:', relevantDocs.length);
+                relevantDocs.forEach((doc, i) => {
+                    console.log(`\nDocument ${i + 1}:`);
+                    console.log('Content:', doc.pageContent);
+                    console.log('Metadata:', doc.metadata);
+                });
+
+                const context = relevantDocs
+                    .map((d) => {
+                        const m = d.metadata as Record<string, any>;
+                        return `[${m.category ?? 'general'}] ${d.pageContent}`;
+                    })
+                    .join('\n\n');
+
+                console.log('\n=== Generated Prompt ===');
+                const systemPrompt = PROMPT_TEMPLATES.RAG
+                    .replace('{context}', context)
+                    .replace('{question}', question);
+
+                console.log(systemPrompt);
+
+                const result = await streamText({
+                    model: groq('llama3-8b-8192'),      // valid model id
+                    messages: [{ role: 'system', content: systemPrompt }],
+                    temperature: 0,
+                  });
+
+                console.dir(result, { depth: null });
+                console.log('\n=== Response Generated ===' + result.textStream);
+                return result.toDataStreamResponse();
+            }
+        } catch (searchError) {
+            console.error("Error during similarity search:", searchError);
+        }
+
+        // If no results from similarity search, try with retriever
+        console.log("\nTrying retriever search...");
+        const retriever = vectorStore.asRetriever({
+            k: 2, // Reduced from 4 to 2 to be more selective
+            searchType: "similarity",
+        });
+
+        const docs = await retriever.getRelevantDocuments(question);
+        console.log("Retriever results:", docs.length);
+
+        let context = '';
+        if (docs.length > 0) {
+            console.log('\n=== Retrieved Documents ===');
+            console.log('Count:', docs.length);
+            docs.forEach((doc, i) => {
+                console.log(`\nDocument ${i + 1}:`);
+                console.log('Content:', doc.pageContent);
+                console.log('Metadata:', doc.metadata);
+            });
+
+            context = docs
+                .map((d) => {
+                    const m = d.metadata as Record<string, any>;
+                    return `[${m.category ?? 'general'}] ${d.pageContent}`;
+                })
+                .join('\n\n');
+        }
+
+        console.log('\n=== Generated Prompt ===');
+        const systemPrompt = PROMPT_TEMPLATES.RAG
+            .replace('{context}', context || 'No context available.')
+            .replace('{question}', question);
+
+        console.log(systemPrompt);
+
+        const result = await streamText({
+            model: groq('llama3-8b-8192'),      // valid model id
+            messages: [
+                { role: 'system', content: systemPrompt }
+            ],
+            temperature: 0,
+        });
+
+        console.log('\n=== Response Generated ===');
+        return result.toDataStreamResponse();
+    } catch (error) {
+        console.error('\n=== Error in RAG answer ===');
+        console.error(error);
+        throw error;
+    }
 }
