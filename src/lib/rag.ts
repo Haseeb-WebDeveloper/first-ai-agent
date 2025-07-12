@@ -7,9 +7,9 @@ import { groq } from '@ai-sdk/groq';
 
 /* ---------- Vector store (Supabase) ------------------------------------ */
 const embeddings = new OllamaEmbeddings({
-    model: 'bge-m3',                       // 1 024‑dim
+    model: 'bge-m3',                     
     baseUrl: 'http://localhost:11434',     // default Ollama endpoint
-  });
+});
 
 const vectorStore = new SupabaseVectorStore(embeddings, {
     client: supabaseClient,
@@ -17,12 +17,27 @@ const vectorStore = new SupabaseVectorStore(embeddings, {
     queryName: 'match_documents',
 });
 
+type Message = {
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+};
+
 export async function answer(
-    question: string,
+    messages: Message[],
 ) {
     try {
         console.log('\n=== RAG Query Start ===');
-        console.log('Question:', question);
+        // Get the last user message
+        const lastMessage = messages[messages.length - 1].content;
+        console.log('Current question:', lastMessage);
+
+        // Format previous conversation for context
+        const conversationHistory = messages
+            .slice(0, -1) // Exclude the current message
+            .map(msg => `${msg.role}: ${msg.content}`)
+            .join('\n');
+        
+        console.log('Conversation history:', conversationHistory);
 
         // First verify documents exist
         const { data: docCount, error: countError } = await supabaseClient
@@ -39,7 +54,7 @@ export async function answer(
         console.log("\nTrying direct similarity search...");
         try {
             // Get documents with scores
-            const similarDocs = await vectorStore.similaritySearchWithScore(question, 4);
+            const similarDocs = await vectorStore.similaritySearchWithScore(lastMessage, 4);
             console.log("Similarity search results:", similarDocs.length);
             console.log("Search scores:", similarDocs.map(([_, score]) => score));
 
@@ -74,15 +89,21 @@ export async function answer(
                 console.log('\n=== Generated Prompt ===');
                 const systemPrompt = PROMPT_TEMPLATES.RAG
                     .replace('{context}', context)
-                    .replace('{question}', question);
+                    .replace('{question}', lastMessage);
 
-                console.log(systemPrompt);
+                // Add conversation history to the prompt
+                const fullPrompt = `Previous conversation:\n${conversationHistory}\n\n${systemPrompt}`;
+                console.log(fullPrompt);
 
                 const result = await streamText({
                     model: groq('llama3-8b-8192'),      // valid model id
-                    messages: [{ role: 'system', content: systemPrompt }],
+                    messages: [
+                        { role: 'system', content: fullPrompt },
+                        ...messages.slice(0, -1), // Include previous messages
+                        { role: 'user', content: lastMessage }
+                    ],
                     temperature: 0,
-                  });
+                });
 
                 console.dir(result, { depth: null });
                 console.log('\n=== Response Generated ===' + result.textStream);
@@ -95,11 +116,11 @@ export async function answer(
         // If no results from similarity search, try with retriever
         console.log("\nTrying retriever search...");
         const retriever = vectorStore.asRetriever({
-            k: 2, // Reduced from 4 to 2 to be more selective
+            k: 2,
             searchType: "similarity",
         });
 
-        const docs = await retriever.getRelevantDocuments(question);
+        const docs = await retriever.getRelevantDocuments(lastMessage);
         console.log("Retriever results:", docs.length);
 
         let context = '';
@@ -123,14 +144,18 @@ export async function answer(
         console.log('\n=== Generated Prompt ===');
         const systemPrompt = PROMPT_TEMPLATES.RAG
             .replace('{context}', context || 'No context available.')
-            .replace('{question}', question);
+            .replace('{question}', lastMessage);
 
-        console.log(systemPrompt);
+        // Add conversation history to the prompt
+        const fullPrompt = `Previous conversation:\n${conversationHistory}\n\n${systemPrompt}`;
+        console.log(fullPrompt);
 
         const result = await streamText({
             model: groq('llama3-8b-8192'),      // valid model id
             messages: [
-                { role: 'system', content: systemPrompt }
+                { role: 'system', content: fullPrompt },
+                ...messages.slice(0, -1), // Include previous messages
+                { role: 'user', content: lastMessage }
             ],
             temperature: 0,
         });

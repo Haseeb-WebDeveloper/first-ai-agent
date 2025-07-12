@@ -16,6 +16,8 @@ async function main() {
     const files = await fs.readdir(dataDir);  //read all files in the dataDir
     const mdFiles = files.filter(f => f.endsWith(".md"));
 
+    console.log(`Found ${mdFiles.length} markdown files in ${dataDir}`);
+
     // Process each file and add metadata
     const docs = [];
     for (const file of mdFiles) {
@@ -40,6 +42,8 @@ async function main() {
         }]
       );
 
+      console.log(`Processed ${fileChunks.length} chunks from ${file}`);
+
       docs.push(...fileChunks);
     }
 
@@ -53,15 +57,9 @@ async function main() {
         model: "bge-m3",
     });
 
-    // First verify the Supabase connection
-    const { data: tableInfo, error: tableError } = await supabaseClient
-      .from('documents')
-      .select('count');
-    
-    if (tableError) {
-      console.error("Error accessing Supabase table:", tableError);
-      return;
-    }
+    console.log(`Embedding ${docs.length} documents...`);
+
+   
 
     // Store the documents
     const store = await SupabaseVectorStore.fromDocuments(
@@ -74,9 +72,12 @@ async function main() {
       }
     );
 
+    console.log(`Stored ${store} documents in Supabase`);
+
     // Verify storage by trying to retrieve a document
     const testQuery = "pricing plans";
     await store.similaritySearchWithScore(testQuery, 1);
+    console.log(`Retrieved 1 document for "${testQuery}"`);
   } catch (error) {
     console.error("\nError during ingestion:", error);
     process.exit(1);

@@ -12,10 +12,8 @@ export async function POST(req: Request) {
       return new Response('Messages array is required', { status: 400 });
     }
 
-    // Get the last user message
-    const message = messages[messages.length - 1].content;
-
-    const response = await answerFunction(message);
+    // Pass the entire message history to the RAG function
+    const response = await answerFunction(messages);
     return response;
   } catch (error) {
     console.error('Error in chat API:', error);
