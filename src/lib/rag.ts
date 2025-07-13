@@ -32,6 +32,9 @@ export async function answer(messages: Message[]) {
     // First, let the AI decide if it needs to use tools
     const result = await streamText({
       model: groq("llama3-8b-8192"),
+      providerOptions: {
+        groq: { reasoningFormat: "parsed" },
+      },
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: lastMessage },
@@ -40,7 +43,7 @@ export async function answer(messages: Message[]) {
       maxSteps: 3,
       temperature: 0,
     });
-
+    
     return result.toDataStreamResponse();
   } catch (error) {
     console.error("\n=== Error in RAG answer ===");

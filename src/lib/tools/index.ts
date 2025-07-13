@@ -1,6 +1,7 @@
 import { databaseTool } from './database';
+import { sendMailTool } from './send-mail';
 
 export const tools = {
     search_knowledge_base: databaseTool,
-    // Add more tools here as we create them
+    send_mail: sendMailTool,
 } as const; 
