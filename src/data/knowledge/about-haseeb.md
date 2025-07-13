@@ -1,101 +1,207 @@
-# Haseeb Khan — Full‑Stack Developer & AI Engineer
+# Haseeb Khan — Full‑Stack Developer & AI Engineer Training Data
 
-## Hello, I'm Haseeb 👋
+## Personal Information
+- Full Name: Haseeb Ahmed Raza Khan
+- Date of Birth: February 14, 2007
+- Location: BahawalNagar, Pakistan
+- Time Zone: UTC +5
+- Languages: English, Urdu, Punjabi, Hindi
+- Current Role: Full-Stack Developer & AI Engineer at Figmenta Agency
 
-I'm an 18-year-old developer from BahawalNagar, Pakistan, who fell in love with code at a young age. What started as curiosity about "how websites work" has grown into a passion for building digital experiences that actually matter to people.
+## Professional Background
+Haseeb is an young self-taught developer from BahawalNagar, Pakistan. He began his coding journey out of curiosity about web development and has since become a skilled full-stack developer and AI engineer.
 
-**Full Name:** Haseeb Ahmed Raza Khan  
-**Born:** February 14, 2007  
-**Current Focus:** Building intelligent web applications and AI tools that solve real problems  
-**Location:** BahawalNagar, Pakistan (but I work with teams worldwide)
+### Education Path
+- Completed Matriculation Certificate (grades 1-10) 
+- Completed Intermediate in Computer Science at KIPS College
+- Achieved 14th position in Intermediate board exams
+- Made the decision to skip university and spend a gap year mastering web development
+- Self-taught HTML, CSS, JavaScript, React, TypeScript, and Next.js during this period
+- Became job-ready through self-directed learning
 
-## My Story
+### Career Journey
+- Discovered and hired by Figmenta Agency based on his portfolio and skills
+- Agency found his work online, conducted interviews, and offered him a position
+- Taught himself GSAP animation and motion design
+- Started earning freelance projects and launched developer tools
+- Now works with clients worldwide while based in Pakistan
 
-Growing up in a small Pakistani town, I didn't have access to fancy coding bootcamps or Silicon Valley mentors. What I had was curiosity, an internet connection, and the determination to figure things out.
+## Technical Expertise
 
-After completing my intermediate education in Computer Science at KIPS College (where I ranked 14th in board exams), I made what many thought was a risky decision: I chose to skip university and spend a year diving deep into web development instead.
+### Frontend Technologies
+- Next.js 15 (App Router) - Primary framework
+- React 18 - Component library
+- TypeScript - Type safety
+- Tailwind CSS - Styling
+- shadcn/ui - UI components
+- GSAP - Advanced animations
+- Framer Motion - Motion design
+- WebGL - 3D graphics
+- React Native - Mobile development
 
-That year changed everything. While my classmates were attending lectures, I was:
-- Building my first React applications
-- Learning Next.js from the ground up
-- Mastering animation with GSAP
-- Creating real projects for real users
+### Backend Technologies
+- Node.js 20 - Runtime environment
+- Bun - JavaScript runtime
+- FastAPI - Python web framework
+- Express - Node.js framework
+- GraphQL - API query language
 
-The gamble paid off. Figmenta Agency found my work online, interviewed me, and offered me a position. Since then, I've been building websites, SaaS products, and AI tools that are used by people around the world.
+### Databases & Storage
+- MongoDB - NoSQL database
+- PostgreSQL with pgvector - SQL database with vector support
+- Supabase - Backend as a service
+- Neon - Serverless PostgreSQL
+- Prisma - Database ORM
 
-## What I Actually Do
+### AI & Machine Learning
+- LangChain - AI application framework
+- Llama-Index - Data framework for LLMs
+- Ollama - Local LLM runner
+- OpenAI API - AI model integration
+- BGE-M3 embeddings - Text embeddings
+- Qdrant - Vector database
+- Custom vector ingestion pipelines
 
-I don't just write code—I solve problems. Here's what that looks like:
+### DevOps & Tools
+- Vercel - Deployment platform
+- GitHub - Version control
+- Git - Source control
+- Sanity.io - Headless CMS
+- WordPress - Content management
 
-**For Businesses:** I build complete web experiences from design to deployment. Whether you need a stunning brand website or a full SaaS platform, I handle the entire process.
+## Services Offered
 
-**For Entrepreneurs:** I help turn ideas into working products. From the initial concept to user authentication, payments, and beyond.
+### Web Development
+- Complete brand website development
+- Business website creation
+- Portfolio website design
+- Landing page development
+- E-commerce solutions
+- Responsive web design
 
-**For Teams:** I create AI-powered tools that actually save time and money. Think smart chatbots, document processing systems, and automation workflows.
+### SaaS Development
+- MVP development and validation
+- User authentication systems
+- Payment integration
+- Database design and setup
+- API development
+- Admin dashboards
 
-## The Technology I Use
+### AI Solutions
+- AI chatbot development
+- RAG (Retrieval-Augmented Generation) pipelines
+- Document processing systems
+- PDF and Markdown ingestion
+- Web scraping and data chunking
+- Custom embedding systems
+- Automation workflows
 
-I believe in using the right tool for the job, not just the newest shiny framework:
+### Consulting & Training
+- Next.js 15 mentorship
+- Technical code reviews
+- Team training sessions
+- Architecture consulting
+- Debugging and optimization
+- Best practices guidance
 
-**Frontend:** Next.js 15, React, TypeScript, Tailwind CSS, GSAP (for those smooth animations)  
-**Backend:** Node.js, FastAPI, Express  
-**Databases:** MongoDB, PostgreSQL, Supabase  
-**AI & Data:** LangChain, OpenAI API, custom embedding pipelines  
-**Hosting:** Vercel, because deployment should be painless  
+## Portfolio Projects
 
-## Some Things I've Built
+### Business Websites
+- Figmenta Agency (https://figmenta.com) - Main agency website
+- Figmenta Studio (https://studio.figmenta.com) - Design studio
+- Figmenta Live (https://live.figmenta.com) - Live services
+- Figmenta Productions (https://productions.figmenta.com) - Production services
+- Isodomi (https://isodomi.nl) - Netherlands construction company
+- Uptraction (https://uptraction.com) - Growth consultancy
+- Duradomi (https://duradomi.netlify.app) - Construction services
+- Renodomi (https://renodomi.netlify.app) - Renovation services
+- Seaside Transportation (https://seaside-transportation.com) - Transportation business
+- Shoelite Club (https://shoelite.club) - Shoe retail platform
 
-**Real Websites for Real Businesses:**
-- [Figmenta Agency](https://figmenta.com) - Where I work, helping brands tell their stories
-- [Uptraction](https://uptraction.com) - Growth consultancy platform
-- [Seaside Transportation](https://seaside-transportation.com) - Local business website
-- [Isodomi](https://isodomi.nl) - Netherlands-based construction company
+### SaaS Products
+- AssessGPT (https://assess-gpt.com) - AI-powered assignment evaluator for teachers
+- Sentriq (https://sentriq.io) - Cybersecurity platform
+- AI SEO Tool (https://ai-seo-tool.netlify.app) - AI-powered SEO copywriting tool
 
-**SaaS Products:**
-- [AssessGPT](https://assess-gpt.com) - AI tool that helps teachers grade assignments
-- [Sentriq](https://sentriq.io) - Cybersecurity platform
+### Portfolio Websites
+- Personal Portfolio (https://haseebkhan.online) - Own portfolio
+- MB Portfolio (https://mbportfolio.pro) - Client portfolio
+- Wasif Khan Portfolio (https://wasif-khan.netlify.app) - Developer portfolio
+- India Masters (https://india-masters.netlify.app) - Professional portfolio
 
-**Developer Tools I Use Daily:**
-- [Gitignore Generator](https://gitignore-generator.netlify.app) - Because nobody memorizes .gitignore files
-- [JSON Formatter](https://jsonformatteronline.site) - For when APIs return messy data
-- [URL Shortener](https://shortener.haseebkhan.online) - Simple, clean, works
+### Developer Tools
+- Gitignore Generator (https://gitignore-generator.netlify.app) - .gitignore file generator
+- JSON Formatter (https://jsonformatteronline.site) - JSON formatting tool
+- URL Shortener (https://shortener.haseebkhan.online) - Link shortening service
+- Gaming Master Hub (https://gamingmasterhub.online) - Full-stack blog platform
+- Fuzzie Production - Browser automation tool
 
-## How I Work
+## Pricing Structure (2025)
 
-**For New Projects:** I start with understanding what you're actually trying to achieve. Not just "I need a website" but "I need to convert visitors into customers" or "I need to automate this repetitive task."
+### Fixed Price Services
+- Quick Landing Page: $500 - Single page business website
+- SaaS MVP: $1,500 - Complete minimum viable product with authentication, payments, and database
+- Custom AI Tools: Quote-based - Depends on complexity and requirements
 
-**For Existing Projects:** I can jump in, understand your codebase, and start contributing immediately. Clean code and good documentation aren't just nice-to-haves—they're requirements.
+### Hourly Services
+- Consulting Rate: $30/hour - Code reviews, debugging, technical guidance
+- Available for: Technical mentorship, architecture consulting, team training
 
-**For Teams:** I believe in clear communication, regular updates, and building things that won't break the moment I'm not around.
+### Special Offers
+- Pakistani clients: Discounted rates in PKR
+- Educational projects: Reduced pricing for schools and learning platforms
+- Nonprofit organizations: Special rates for charitable causes
 
-## Pricing That Makes Sense
+## Working Style & Approach
 
-**Quick Landing Page:** $500 - Perfect for getting your business online fast  
-**SaaS MVP:** $1,500 - Everything you need to validate your idea and get first users  
-**Custom AI Tools:** Let's talk - depends on complexity and requirements  
-**Hourly Consulting:** $30/hour - For code reviews, debugging, or technical guidance  
+### Project Discovery
+- Focuses on understanding actual business goals, not just technical requirements
+- Asks clarifying questions like "What specific problem are you trying to solve?"
+- Prioritizes user experience and business outcomes over technical complexity
 
-*I offer discounts for Pakistani clients, educational projects, and nonprofits because I believe good technology should be accessible.*
+### Development Process
+- Writes clean, maintainable code with proper documentation
+- Follows best practices for version control and deployment
+- Builds scalable solutions that won't break when unmaintained
+- Tests features with real users before delivery
 
-## Let's Build Something Together
+### Communication
+- Provides regular project updates
+- Available across all time zones for global clients
+- Maintains clear and honest communication about project scope and timelines
+- Responsive to client needs and feedback
 
-Whether you're a startup founder with a big idea, a business owner who needs a better web presence, or a developer who wants to learn Next.js and AI integration, I'd love to hear from you.
+## Personal Philosophy
 
-**Email:** [web.dev.haseeb@gmail.com](mailto:web.dev.haseeb@gmail.com)  
-**GitHub:** [github.com/Haseeb-WebDeveloper](https://github.com/Haseeb-WebDeveloper)  
-**LinkedIn:** [linkedin.com/in/haseeb-ahmed-raza-khan](https://linkedin.com/in/haseeb-ahmed-raza-khan)  
-**WhatsApp:** +923147651112  
+### Technical Approach
+- Believes in using the right tool for the job, not just the newest technology
+- Prioritizes performance, scalability, and user experience
+- Focuses on solving real problems rather than showing off technical skills
+- Builds with real users in mind, not just for demonstration
 
-I work across all time zones, so whether you're in New York or Singapore, we can make it work.
+### Business Values
+- Treats every project as if it were his own business
+- Believes good technology should be accessible to everyone
+- Committed to making people's lives easier through software
+- Values long-term relationships over short-term profits
 
-## A Personal Note
+### Learning & Growth
+- Continuously learning new technologies and techniques
+- Stays updated with industry trends and best practices
+- Shares knowledge through open-source contributions
+- Mentors other developers in Next.js and AI development
 
-I'm not your typical developer. I don't have a computer science degree, I didn't go to a prestigious university, and I didn't start with any special advantages. What I have is genuine curiosity about how things work, the persistence to figure out problems, and the belief that good software should make people's lives easier.
+## Contact Information
+- Primary Email: web.dev.haseeb@gmail.com
+- GitHub: https://github.com/Haseeb-WebDeveloper
+- LinkedIn: https://linkedin.com/in/haseeb-ahmed-raza-khan
+- Instagram: https://instagram.com/haseeb.ahmed.raza.khan
+- WhatsApp: +923147651112
+- Working Hours: Available anytime for global clients
 
-Every line of code I write is with real users in mind. Every feature I build is tested by real people. Every project I take on is an opportunity to create something that actually matters.
+## Professional Summary
+Haseeb Khan is a skilled 18-year-old full-stack developer and AI engineer from BahawalNagar, Pakistan. Despite his young age, he has proven expertise in modern web development, particularly with Next.js, React, and AI integration. His journey from a curious teenager to a professional developer hired by Figmenta Agency demonstrates his dedication and technical abilities.
 
-If you're looking for someone who treats your project like their own, who communicates clearly, and who builds things that last, let's talk.
+He specializes in building complete digital solutions from concept to deployment, with particular strength in SaaS development, AI chatbots, and business websites. His work serves clients worldwide, and he's known for his problem-solving approach, clear communication, and commitment to building software that genuinely helps people.
 
----
-
-*Currently based in BahawalNagar, Pakistan, but working with clients worldwide. Always learning, always building, always excited about the next challenge.*
+Haseeb represents a new generation of developers who combine technical skills with business understanding, focusing on creating value rather than just implementing features. His background of self-directed learning and real-world application makes him particularly effective at understanding client needs and delivering practical solutions.

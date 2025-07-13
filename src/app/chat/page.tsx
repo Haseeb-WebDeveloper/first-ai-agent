@@ -53,47 +53,21 @@ export default function ChatPage() {
                 <p className=" mt-1">Start a conversation about Haseeb</p>
               </div>
             ) : (
-              messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`flex items-start space-x-3 max-w-[80%] ${
-                      message.role === "user"
-                        ? "flex-row-reverse space-x-reverse"
-                        : ""
-                    }`}
-                  >
-                    <div
-                      className={` flex items-center justify-center flex-shrink-0`}
-                    >
-                      {message.role === "user" ? (
-                        <Image
-                          src="/user.svg"
-                          alt="logo"
-                          width={25}
-                          height={25}
-                        />
-                      ) : (
-                        <Image
-                          src="/logo.svg"
-                          alt="logo"
-                          width={25}
-                          height={25}
-                        />
-                      )}
-                    </div>
-                    <div className={""}>
-                      <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                        {message.content}
-                      </p>
-                    </div>
+              <div>
+                {messages.map((message) => (
+                  <div key={message.id} className="whitespace-pre-wrap">
+                    {message.role === "user" ? "User: " : "AI: "}
+                    {message.parts.map((part, i) => {
+                      switch (part.type) {
+                        case "text":
+                          return (
+                            <div key={`${message.id}-${i}`}>{part.text}</div>
+                          );
+                      }
+                    })}
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
 
             {/* Loading Indicator */}
