@@ -64,7 +64,13 @@ export const sendMailTool = tool({
             });
 
             if (!response.ok) {
-                throw new Error('Failed to send email', { cause: response });
+                const errorText = await response.text();
+                console.error('API Response Error:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: errorText
+                });
+                throw new Error(`Failed to send email (${response.status}): ${errorText}`);
             }
 
             console.log("Email sent successfully (send-mail");
@@ -73,9 +79,26 @@ export const sendMailTool = tool({
 
         } catch (error) {
             console.error("\n=== Error Sending Email ===");
-            console.error(error);
-            return "I encountered an error while trying to send your information to Haseeb. " +
-                   "Please try again later or reach out through other contact methods.";
+            console.error('Error details:', error);
+            
+            let userMessage = "I encountered an error while trying to send your information to Haseeb. ";
+            
+            if (error instanceof Error) {
+                console.error('Error message:', error.message);
+                
+                // Provide more specific user feedback based on error type
+                if (error.message.includes('Missing required environment variables')) {
+                    userMessage += "The email service is not properly configured. Please contact the administrator.";
+                } else if (error.message.includes('Failed to send email')) {
+                    userMessage += "There was an issue with the email service. Please try again later or reach out through other contact methods.";
+                } else {
+                    userMessage += "Please try again later or reach out through other contact methods.";
+                }
+            } else {
+                userMessage += "Please try again later or reach out through other contact methods.";
+            }
+            
+            return userMessage;
         }
     }
 }); 

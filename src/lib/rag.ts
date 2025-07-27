@@ -32,7 +32,7 @@ export async function answer(messages: Message[]) {
 Be natural and conversational. Use tools only when needed:
 - Don't call search_knowledge_base if you already have the information from previous searches in this conversation
 - Only search when you need specific details about Haseeb that you don't currently know
-- Use send_mail when you have a qualified lead with project details AND their contact information
+- Use send_mail when you have a qualified lead with project details AND their contact information (email atleast)
 - Focus on natural conversation flow rather than robotic tool usage`;
 
     // Use streamText with enhanced prompting and tool usage
@@ -47,8 +47,6 @@ Be natural and conversational. Use tools only when needed:
       temperature: 0.1, // Slightly higher for more natural conversation
       toolChoice: "auto", // Let AI decide when to use tools
     });
-
-    console.log(result);
 
     return result.toDataStreamResponse();
   } catch (error) {
