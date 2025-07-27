@@ -12,8 +12,6 @@ export async function POST(req: Request) {
       return new Response("Messages array is required", { status: 400 });
     }
 
-    console.log("messages", messages);
-
     return await answerFunction(messages);
   } catch (error) {
     console.error("Error in chat API:", error);

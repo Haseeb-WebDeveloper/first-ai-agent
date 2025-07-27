@@ -77,7 +77,7 @@ export default function ChatPage() {
                   <Image src="/logo.svg" alt="logo" width={25} height={25} />
                   <div className="">
                     <div className="flex items-center space-x-2">
-                      <span className="text-sm">AI is thinking...</span>
+                      <span className="text-sm">Typing...</span>
                     </div>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 import { generateText, streamText } from "ai";
-import { groq } from "@ai-sdk/groq";
-import { tools } from "./tools";
+import { cohere } from '@ai-sdk/cohere';
+import { tools } from "./tools/tools";
 import { PROMPT_TEMPLATES } from "./ai-config";
 
 export type Message = {
@@ -12,7 +12,7 @@ export async function answer(messages: Message[]) {
   try {
     const lastMessage = messages[messages.length - 1].content;
     console.log("\n=== Processing New Message ===");
-    console.log("Last message:", lastMessage);
+    console.log("User Query:", lastMessage);
 
     // Format conversation history
     const conversationHistory = messages
@@ -20,30 +20,36 @@ export async function answer(messages: Message[]) {
       .map((msg) => `${msg.role}: ${msg.content}`)
       .join("\n");
 
-    // Create a more explicit system prompt
+    // Create enhanced system prompt for lead conversion
     const systemPrompt = PROMPT_TEMPLATES.SYSTEM_PROMPT.replace(
       "{conversationHistory}",
       conversationHistory
-    ).replace("{lastMessage}", lastMessage);
+    );
 
-    console.log("\n=== System Prompt ===");
-    console.log(systemPrompt);
+    // Natural conversation prompt that uses tools intelligently
+    const enhancedSystemPrompt = `${systemPrompt}
 
-    // First, let the AI decide if it needs to use tools
+Be natural and conversational. Use tools only when needed:
+- Don't call search_knowledge_base if you already have the information from previous searches in this conversation
+- Only search when you need specific details about Haseeb that you don't currently know
+- Use send_mail when you have a qualified lead with project details AND their contact information
+- Focus on natural conversation flow rather than robotic tool usage`;
+
+    // Use streamText with enhanced prompting and tool usage
     const result = await streamText({
-      model: groq("llama3-8b-8192"),
-      providerOptions: {
-        groq: { reasoningFormat: "parsed" },
-      },
+      model: cohere("command-r-plus"),
       messages: [
-        { role: "system", content: systemPrompt },
+        { role: "system", content: enhancedSystemPrompt },
         { role: "user", content: lastMessage },
       ],
       tools,
-      maxSteps: 3,
-      temperature: 0,
+      maxSteps: 8, // Increased to allow for knowledge search + response + follow-up
+      temperature: 0.1, // Slightly higher for more natural conversation
+      toolChoice: "auto", // Let AI decide when to use tools
     });
-    
+
+    console.log(result);
+
     return result.toDataStreamResponse();
   } catch (error) {
     console.error("\n=== Error in RAG answer ===");

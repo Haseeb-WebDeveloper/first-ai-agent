@@ -8,6 +8,8 @@ export async function POST(req: Request) {
   try {
     const { name, email, subject, message, category } = await req.json();
 
+    console.log(name, email, subject, message, category);
+
     // Create a formatted email body
     const emailContent = `
     New Contact from AI Assistant
@@ -32,6 +34,8 @@ export async function POST(req: Request) {
       text: emailContent,
       html: emailContent.replace(/\n/g, "<br>"),
     });
+
+    console.log("Email sent successfully");
 
     return NextResponse.json({ success: true });
   } catch (error) {
